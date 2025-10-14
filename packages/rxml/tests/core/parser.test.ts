@@ -142,6 +142,24 @@ describe("robust-xml parser", () => {
       expect(result).toEqual(schemaTestCases.stringProperty.expected);
     });
 
+    // it("handles CDATA sections with special characters", () => {
+    //   const result = parse(
+    //     "<template_diff><![CDATA[\n// ... existing code ...\n      <view\n        id=\"aQi8azg02u\"\n        title=\"Frame 2082895687\"\n        :style=\"{\n          display: 'flex',\n          width: '100%',\n          height: '37px',\n          marginTop: '20px',\n          position: 'relative',\n          overflow: 'hidden',\n          justifyContent: 'center',\n          alignItems: 'center',\n          maxWidth: '226px',\n        }\"\n      >\n        <image\n          id=\"BdgAAyAza9\"\n          title=\"恭喜获得限时优惠\"\n          :src=\"'https://lf3-static.bytednsdoc.com/obj/eden-cn/lthsm/ljhwZthlaukjlkulzlp/figma-mcp/1758648405273/title_text.png'\"\n          :style=\"{\n            width: '100%',\n            height: '28px',\n            maxWidth: '224px',\n            animations: [\n              {\n                id: 'WoZWo1_0uF',\n                name: '未命名',\n                duration: 1,\n                delay: 0,\n                easing: 'linear',\n                iterations: 1,\n                fill: 'none',\n                direction: 'normal',\n                keyframes: [\n                  {\n                    id: '4zh9rMH-sN',\n                    progress: 0,\n                    transforms: { usedKeys: [] },\n                  },\n                  {\n                    id: 'D8LTet48ms',\n                    progress: 100,\n                    transforms: { usedKeys: [] },\n                  },\n                ],\n              },\n            ],\n          }\"\n        />\n// ... existing code ...\n            <text\n              id=\"-Y1Fk85vbI\"\n              title=\"28\"\n              :text-maxline=\"1\"\n              :style=\"{\n                width: 'auto',\n                height: '62px',\n                color: 'rgba(243, 79, 52, 1)',\n                fontSize: '62px',\n                lineHeight: '62px',\n                flexShrink: '0',\n              }\"\n              >{{ Math.floor($ad.generic_benefits[0].credit / 100) }}</text\n            >\n// ... existing code ...\n            <text\n              id=\"EzxWDyC7fQ\"\n              title=\"满56可用\"\n              :text-maxline=\"0\"\n              :style=\"{\n                width: 'auto',\n                height: '14px',\n                marginTop: '5px',\n                color: 'rgba(243, 79, 52, 1)',\n                fontWeight: '500',\n                fontSize: '14px',\n                lineHeight: '14px',\n              }\"\n              >满{{ Math.floor($ad.generic_benefits[0].threshold / 100) }}可用</text\n            >\n// ... existing code ...\n            <text\n              id=\"6Kvbabj8cT\"\n              title=\"23:23:44\"\n              :text-maxline=\"0\"\n              :style=\"{\n                width: 'auto',\n                height: '12px',\n                color: 'rgba(22, 24, 35, 0.45)',\n                fontSize: '12px',\n                lineHeight: '12px',\n              }\"\n              >{{ $ad.generic_benefits[0].expire_timestamp ? formatTime($ad.generic_benefits[0].expire_timestamp) : '23:23:44' }}</text\n            >\n// ... existing code ...\n              <text\n                id=\"oTv6M2kUel\"\n                title=\"立即使用\"\n                :text-maxline=\"1\"\n                :style=\"{\n                  width: 'auto',\n                  height: '22px',\n                  color: 'rgba(255, 255, 255, 1)',\n                  textAlign: 'center',\n                  fontWeight: '500',\n                  fontSize: '15px',\n                  lineHeight: '22px',\n                }\"\n                >{{ $ad.button_text }}</text\n              >\n// ... existing code ...\n]]>\n</template_diff>",
+    //     {
+    //       type: "object",
+    //       properties: {
+    //         template_diff: { type: "string" },
+    //         template_instructions: { type: "string" },
+    //         script_setup_diff: { type: "string" },
+    //         script_setup_instructions: { type: "string" },
+    //       },
+    //       required: ["template_diff"],
+    //     }
+    //   );
+    //   const root = result[0] as any;
+    //   expect(root.children[0].children[0]).toBe("<test>content</test>");
+    // });
+
     it("parses and coerces number properties", () => {
       const result = parse(
         schemaTestCases.numberProperty.xml,

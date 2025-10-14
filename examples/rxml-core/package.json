@@ -15,7 +15,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ai-sdk-tool/rxml": "workspace:*",
+    "@biubiupiu/rxml": "workspace:*",
     "tsx": "^4.20.5"
   },
   "devDependencies": {

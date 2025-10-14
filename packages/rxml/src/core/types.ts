@@ -74,6 +74,12 @@ export interface StringifyOptions {
    * (e.g., <item checked>), for compatibility with existing outputs.
    */
   strictBooleanAttributes?: boolean;
+  /**
+   * Whether to disable escaping
+   * When true, the content will not be escaped
+   * When false (default), the content will be escaped
+   */
+  disableEscape?: boolean;
 }
 
 /**

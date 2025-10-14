@@ -171,6 +171,19 @@ describe("stringify", () => {
     });
   });
 
+  describe("disableEscape option", () => {
+    it("disables escaping", () => {
+      const result = stringify(
+        "root",
+        { text: "A < B & C > D and 'quotes'\"double\"" },
+        { disableEscape: true }
+      );
+      expect(result).toContain(
+        "<text>A < B & C > D and 'quotes'\"double\"</text>"
+      );
+    });
+  });
+
   describe("minimalEscaping option", () => {
     it("escapes minimal characters in text content", () => {
       const xml = stringify(

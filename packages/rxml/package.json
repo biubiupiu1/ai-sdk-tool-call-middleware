@@ -1,6 +1,6 @@
 {
-  "name": "@ai-sdk-tool/rxml",
-  "version": "0.1.1",
+  "name": "@biubiupiu/rxml",
+  "version": "0.1.1-biubiupiu.4",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",

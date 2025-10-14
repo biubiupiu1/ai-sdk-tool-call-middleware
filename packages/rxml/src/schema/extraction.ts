@@ -164,6 +164,13 @@ export function extractRawInner(
                 t++;
                 while (t < len && isNameChar(xmlContent[t])) t++;
               }
+
+              // If no valid tag name was found (t == nx), skip this < character
+              if (t === nx) {
+                pos = nextLt + 1;
+                continue;
+              }
+
               let u = t;
               let isSelfClosingNested = false;
               while (u < len) {
@@ -342,6 +349,12 @@ export function findAllInnerRanges(
           t++;
           while (t < len && isNameChar(xmlContent[t])) t++;
         }
+
+        // If no valid tag name was found (t == nx), skip this < character
+        if (t === nx) {
+          pos = nextLt + 1;
+          continue;
+        }
         let u = t;
         let isSelfClosingNested = false;
         while (u < len) {
@@ -513,6 +526,13 @@ export function findFirstTopLevelRange(
               t++;
               while (t < len && isNameChar(xmlContent[t])) t++;
             }
+
+            // If no valid tag name was found (t == nx), skip this < character
+            if (t === nx) {
+              pos = nextLt + 1;
+              continue;
+            }
+
             const startName = xmlContent.slice(nx, t);
             let u = t;
             let isSelfClosingNested = false;

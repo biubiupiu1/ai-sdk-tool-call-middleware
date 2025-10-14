@@ -24,6 +24,7 @@ export function stringify(
     const minimalEscaping = options.minimalEscaping ?? false;
     const suppressEmptyNode = options.suppressEmptyNode ?? false;
     const strictBooleanAttributes = options.strictBooleanAttributes ?? false;
+    const disableEscape = options.disableEscape ?? false;
 
     let result = "";
 
@@ -37,6 +38,7 @@ export function stringify(
       0,
       format,
       suppressEmptyNode,
+      disableEscape,
       minimalEscaping,
       strictBooleanAttributes
     );
@@ -56,6 +58,7 @@ function stringifyValue(
   depth: number,
   format: boolean,
   suppressEmptyNode: boolean,
+  disableEscape: boolean,
   minimalEscaping: boolean,
   strictBooleanAttributes: boolean
 ): string {
@@ -72,9 +75,11 @@ function stringifyValue(
     typeof value === "number" ||
     typeof value === "boolean"
   ) {
-    const content = minimalEscaping
-      ? escapeXmlMinimalText(String(value))
-      : escapeXml(String(value));
+    const content = disableEscape
+      ? String(value)
+      : minimalEscaping
+        ? escapeXmlMinimalText(String(value))
+        : escapeXml(String(value));
     if (content === "" && suppressEmptyNode) return "";
     return `${indent}<${tagName}>${content}</${tagName}>${newline}`;
   }
@@ -88,6 +93,7 @@ function stringifyValue(
         depth,
         format,
         suppressEmptyNode,
+        disableEscape,
         minimalEscaping,
         strictBooleanAttributes
       );
@@ -102,15 +108,18 @@ function stringifyValue(
       depth,
       format,
       suppressEmptyNode,
+      disableEscape,
       minimalEscaping,
       strictBooleanAttributes
     );
   }
 
   // Fallback for other types
-  const content = minimalEscaping
-    ? escapeXmlMinimalText(String(value))
-    : escapeXml(String(value));
+  const content = disableEscape
+    ? String(value)
+    : minimalEscaping
+      ? escapeXmlMinimalText(String(value))
+      : escapeXml(String(value));
   if (content === "" && suppressEmptyNode) return "";
   return `${indent}<${tagName}>${content}</${tagName}>${newline}`;
 }
@@ -124,6 +133,7 @@ function stringifyObject(
   depth: number,
   format: boolean,
   suppressEmptyNode: boolean,
+  disableEscape: boolean,
   minimalEscaping: boolean,
   strictBooleanAttributes: boolean
 ): string {
@@ -168,14 +178,18 @@ function stringifyObject(
       //   escaping: prefer " unless value contains ", otherwise use '.
       //   See: https://www.w3.org/TR/2008/REC-xml-20081126/
       if (valueStr.indexOf('"') === -1) {
-        const escaped = minimalEscaping
-          ? escapeXmlMinimalAttr(valueStr, '"')
-          : escapeXml(valueStr);
+        const escaped = disableEscape
+          ? valueStr
+          : minimalEscaping
+            ? escapeXmlMinimalAttr(valueStr, '"')
+            : escapeXml(valueStr);
         openTag += ` ${attrName}="${escaped}"`;
       } else {
-        const escaped = minimalEscaping
-          ? escapeXmlMinimalAttr(valueStr, "'")
-          : escapeXml(valueStr);
+        const escaped = disableEscape
+          ? valueStr
+          : minimalEscaping
+            ? escapeXmlMinimalAttr(valueStr, "'")
+            : escapeXml(valueStr);
         openTag += ` ${attrName}='${escaped}'`;
       }
     }
@@ -196,9 +210,11 @@ function stringifyObject(
   if (!hasElements && hasTextContent && textContent) {
     // 2.4 Character Data and Markup: '<' and '&' MUST be escaped in content.
     // Minimal vs conservative controlled by option.
-    const content = minimalEscaping
-      ? escapeXmlMinimalText(textContent)
-      : escapeXml(textContent);
+    const content = disableEscape
+      ? textContent
+      : minimalEscaping
+        ? escapeXmlMinimalText(textContent)
+        : escapeXml(textContent);
     return `${indent}${openTag}${content}</${tagName}>${newline}`;
   }
 
@@ -207,9 +223,11 @@ function stringifyObject(
 
   if (hasTextContent && textContent) {
     // See spec notes above (2.4, 4.6) for escaping rationale.
-    const content = minimalEscaping
-      ? escapeXmlMinimalText(textContent)
-      : escapeXml(textContent);
+    const content = disableEscape
+      ? textContent
+      : minimalEscaping
+        ? escapeXmlMinimalText(textContent)
+        : escapeXml(textContent);
     if (format) result += `${newline}${childIndent}${content}`;
     else result += content;
   }
@@ -224,6 +242,7 @@ function stringifyObject(
         depth + 1,
         format,
         suppressEmptyNode,
+        disableEscape,
         minimalEscaping,
         strictBooleanAttributes
       );
@@ -245,7 +264,7 @@ export function stringifyNodes(
   format = true,
   options: Pick<
     StringifyOptions,
-    "strictBooleanAttributes" | "minimalEscaping"
+    "strictBooleanAttributes" | "minimalEscaping" | "disableEscape"
   > = {}
 ): string {
   let result = "";
@@ -270,13 +289,14 @@ export function stringifyNode(
   format = true,
   options: Pick<
     StringifyOptions,
-    "strictBooleanAttributes" | "minimalEscaping"
+    "strictBooleanAttributes" | "minimalEscaping" | "disableEscape"
   > = {}
 ): string {
   const indent = format ? "  ".repeat(depth) : "";
   const newline = format ? "\n" : "";
   const minimalEscaping = options.minimalEscaping ?? false;
   const strictBooleanAttributes = options.strictBooleanAttributes ?? false;
+  const disableEscape = options.disableEscape ?? false;
 
   let result = `${indent}<${node.tagName}`;
 
@@ -289,14 +309,18 @@ export function stringifyNode(
         result += ` ${attrName}`;
       }
     } else if (attrValue.indexOf('"') === -1) {
-      const escaped = minimalEscaping
-        ? escapeXmlMinimalAttr(attrValue, '"')
-        : escapeXml(attrValue);
+      const escaped = disableEscape
+        ? attrValue
+        : minimalEscaping
+          ? escapeXmlMinimalAttr(attrValue, '"')
+          : escapeXml(attrValue);
       result += ` ${attrName}="${escaped}"`;
     } else {
-      const escaped = minimalEscaping
-        ? escapeXmlMinimalAttr(attrValue, "'")
-        : escapeXml(attrValue);
+      const escaped = disableEscape
+        ? attrValue
+        : minimalEscaping
+          ? escapeXmlMinimalAttr(attrValue, "'")
+          : escapeXml(attrValue);
       result += ` ${attrName}='${escaped}'`;
     }
   }
@@ -319,9 +343,11 @@ export function stringifyNode(
   let hasElementChildren = false;
   for (const child of node.children) {
     if (typeof child === "string") {
-      result += minimalEscaping
-        ? escapeXmlMinimalText(child)
-        : escapeXml(child);
+      result += disableEscape
+        ? child
+        : minimalEscaping
+          ? escapeXmlMinimalText(child)
+          : escapeXml(child);
     } else {
       if (!hasElementChildren && format) {
         result += newline;

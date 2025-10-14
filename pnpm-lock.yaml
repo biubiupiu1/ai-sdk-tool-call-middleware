@@ -62,15 +62,15 @@ importers:
       '@ai-sdk-tool/eval':
         specifier: workspace:*
         version: link:../../packages/eval
-      '@ai-sdk-tool/parser':
-        specifier: workspace:*
-        version: link:../../packages/parser
       '@ai-sdk/openai':
         specifier: 2.0.23
         version: 2.0.23(zod@4.1.5)
       '@ai-sdk/openai-compatible':
         specifier: 1.0.13
         version: 1.0.13(zod@4.1.5)
+      '@biubiupiu/rxml':
+        specifier: workspace:*
+        version: link:../../packages/rxml
       ai:
         specifier: 5.0.28
         version: 5.0.28(zod@4.1.5)
@@ -84,15 +84,15 @@ importers:
 
   examples/parser-core:
     dependencies:
-      '@ai-sdk-tool/parser':
-        specifier: workspace:*
-        version: link:../../packages/parser
       '@ai-sdk/openai':
         specifier: 2.0.23
         version: 2.0.23(zod@4.1.5)
       '@ai-sdk/openai-compatible':
         specifier: 1.0.13
         version: 1.0.13(zod@4.1.5)
+      '@biubiupiu/rxml':
+        specifier: workspace:*
+        version: link:../../packages/rxml
       ai:
         specifier: 5.0.28
         version: 5.0.28(zod@4.1.5)
@@ -112,7 +112,7 @@ importers:
 
   examples/rxml-core:
     dependencies:
-      '@ai-sdk-tool/rxml':
+      '@biubiupiu/rxml':
         specifier: workspace:*
         version: link:../../packages/rxml
       tsx:
@@ -133,7 +133,7 @@ importers:
         version: 2.0.0
       ai:
         specifier: '>=3.0.0'
-        version: 5.0.26(zod@4.1.5)
+        version: 5.0.28(zod@4.1.5)
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
@@ -153,15 +153,15 @@ importers:
 
   packages/parser:
     dependencies:
-      '@ai-sdk-tool/rxml':
-        specifier: workspace:*
-        version: link:../rxml
       '@ai-sdk/provider':
         specifier: 2.0.0
         version: 2.0.0
       '@ai-sdk/provider-utils':
         specifier: 3.0.7
         version: 3.0.7(zod@4.1.5)
+      '@biubiupiu/rxml':
+        specifier: workspace:*
+        version: link:../rxml
     devDependencies:
       '@ai-sdk/openai-compatible':
         specifier: 1.0.13
@@ -673,56 +673,67 @@ packages:
     resolution: {integrity: sha512-u72Mzc6jyJwKjJbZZcIYmd9bumJu7KNmHYdue43vT1rXPm2rITwmPWF0mmPzLm9/vJWxIRbao/jrQmxTO0Sm9w==}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.50.0':
     resolution: {integrity: sha512-S4UefYdV0tnynDJV1mdkNawp0E5Qm2MtSs330IyHgaccOFrwqsvgigUD29uT+B/70PDY1eQ3t40+xf6wIvXJyg==}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.50.0':
     resolution: {integrity: sha512-1EhkSvUQXJsIhk4msxP5nNAUWoB4MFDHhtc4gAYvnqoHlaL9V3F37pNHabndawsfy/Tp7BPiy/aSa6XBYbaD1g==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.50.0':
     resolution: {integrity: sha512-EtBDIZuDtVg75xIPIK1l5vCXNNCIRM0OBPUG+tbApDuJAy9mKago6QxX+tfMzbCI6tXEhMuZuN1+CU8iDW+0UQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-loongarch64-gnu@4.50.0':
     resolution: {integrity: sha512-BGYSwJdMP0hT5CCmljuSNx7+k+0upweM2M4YGfFBjnFSZMHOLYR0gEEj/dxyYJ6Zc6AiSeaBY8dWOa11GF/ppQ==}
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-ppc64-gnu@4.50.0':
     resolution: {integrity: sha512-I1gSMzkVe1KzAxKAroCJL30hA4DqSi+wGc5gviD0y3IL/VkvcnAqwBf4RHXHyvH66YVHxpKO8ojrgc4SrWAnLg==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-gnu@4.50.0':
     resolution: {integrity: sha512-bSbWlY3jZo7molh4tc5dKfeSxkqnf48UsLqYbUhnkdnfgZjgufLS/NTA8PcP/dnvct5CCdNkABJ56CbclMRYCA==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.50.0':
     resolution: {integrity: sha512-LSXSGumSURzEQLT2e4sFqFOv3LWZsEF8FK7AAv9zHZNDdMnUPYH3t8ZlaeYYZyTXnsob3htwTKeWtBIkPV27iQ==}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.50.0':
     resolution: {integrity: sha512-CxRKyakfDrsLXiCyucVfVWVoaPA4oFSpPpDwlMcDFQvrv3XY6KEzMtMZrA+e/goC8xxp2WSOxHQubP8fPmmjOQ==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.50.0':
     resolution: {integrity: sha512-8PrJJA7/VU8ToHVEPu14FzuSAqVKyo5gg/J8xUerMbyNkWkO9j2ExBho/68RnJsMGNJq4zH114iAttgm7BZVkA==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.50.0':
     resolution: {integrity: sha512-SkE6YQp+CzpyOrbw7Oc4MgXFvTw2UIBElvAvLCo230pyxOLmYwRPwZ/L5lBe/VW/qT1ZgND9wJfOsdy0XptRvw==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-openharmony-arm64@4.50.0':
     resolution: {integrity: sha512-PZkNLPfvXeIOgJWA804zjSFH7fARBBCpCXxgkGDRjjAhRLOR8o0IGS01ykh5GYfod4c2yiiREuDM8iZ+pVsT+Q==}
@@ -867,12 +878,6 @@ packages:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-
-  ai@5.0.26:
-    resolution: {integrity: sha512-bGNtG+nYQ2U+5mzuLbxIg9WxGQJ2u5jv2gYgP8C+CJ1YI4qqIjvjOgGEZWzvNet8jiOGIlqstsht9aQefKzmBw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4
 
   ai@5.0.28:
     resolution: {integrity: sha512-tnybAqoDFzuK6O1NOMHX1d/wH7Eug8y0H4l/Gl6swi8BYGtlTPDjniKnGYzgTpLTdpj7SI3qjZuomz7evph9+w==}
@@ -2738,14 +2743,6 @@ snapshots:
       acorn: 8.15.0
 
   acorn@8.15.0: {}
-
-  ai@5.0.26(zod@4.1.5):
-    dependencies:
-      '@ai-sdk/gateway': 1.0.15(zod@4.1.5)
-      '@ai-sdk/provider': 2.0.0
-      '@ai-sdk/provider-utils': 3.0.7(zod@4.1.5)
-      '@opentelemetry/api': 1.9.0
-      zod: 4.1.5
 
   ai@5.0.28(zod@4.1.5):
     dependencies:

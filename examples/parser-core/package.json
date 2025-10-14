@@ -15,7 +15,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ai-sdk-tool/parser": "workspace:*",
+    "@biubiupiu/rxml": "workspace:*",
     "@ai-sdk/openai": "2.0.23",
     "@ai-sdk/openai-compatible": "1.0.13",
     "ai": "5.0.28",

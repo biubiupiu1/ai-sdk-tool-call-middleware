@@ -37,14 +37,21 @@ export const morphXmlProtocol = (): ToolCallProtocol => ({
     return RXML.stringify(toolCall.toolName, args, {
       suppressEmptyNode: false,
       format: false,
+      disableEscape: true,
     });
   },
 
   formatToolResponse(toolResult: LanguageModelV2ToolResultPart): string {
-    return RXML.stringify("tool_response", {
-      tool_name: toolResult.toolName,
-      result: toolResult.output,
-    });
+    return RXML.stringify(
+      "tool_response",
+      {
+        tool_name: toolResult.toolName,
+        result: toolResult.output,
+      },
+      {
+        disableEscape: true,
+      }
+    );
   },
 
   parseGeneratedText({ text, tools, options }) {

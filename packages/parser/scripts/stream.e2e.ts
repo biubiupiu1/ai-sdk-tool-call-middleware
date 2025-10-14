@@ -1,23 +1,16 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import {
-  extractReasoningMiddleware,
-  LanguageModel,
-  stepCountIs,
-  streamText,
-  wrapLanguageModel,
-} from "ai";
+import { LanguageModel, stepCountIs, streamText, wrapLanguageModel } from "ai";
 import { z } from "zod";
 
-import {
-  gemmaToolMiddleware,
-  hermesToolMiddleware,
-  morphXmlToolMiddleware,
-} from "@/index";
+import { morphXmlToolMiddleware } from "@/index";
 
 const openrouter = createOpenAICompatible({
   name: "openrouter",
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
+  fetch: (...args) => {
+    return fetch(...args);
+  },
 });
 
 const friendli = createOpenAICompatible({
@@ -27,24 +20,9 @@ const friendli = createOpenAICompatible({
 });
 
 const testModels = {
-  gemma: wrapLanguageModel({
-    model: openrouter("google/gemma-3-27b-it"),
-    middleware: gemmaToolMiddleware,
-  }),
-  hermes: wrapLanguageModel({
-    model: openrouter("nousresearch/hermes-4-405b"),
-    middleware: hermesToolMiddleware,
-  }),
   xml: wrapLanguageModel({
     model: openrouter("z-ai/glm-4.5-air"),
     middleware: morphXmlToolMiddleware,
-  }),
-  reasoning: wrapLanguageModel({
-    model: friendli("deepseek-ai/DeepSeek-R1-0528"),
-    middleware: [
-      hermesToolMiddleware,
-      extractReasoningMiddleware({ tagName: "think" }),
-    ],
   }),
 };
 
@@ -60,33 +38,14 @@ async function streamE2E(model: LanguageModel) {
     model: model,
     temperature: 0.0,
     system: "You are a helpful assistant.",
-    prompt: "What is the weather in my city?",
+    prompt: "Write a todo list vue3 code to a file",
     stopWhen: stepCountIs(4),
     tools: {
-      get_location: {
-        description: "Get the User's location.",
-        inputSchema: z.object({}),
-        execute: async () => {
-          // Simulate a location API call
-          return {
-            city: "New York",
-            country: "USA",
-          };
-        },
-      },
-      get_weather: {
-        description:
-          "Get the weather for a given city. " +
-          "Example cities: 'New York', 'Los Angeles', 'Paris'.",
-        inputSchema: z.object({ city: z.string() }),
-        execute: async ({ city }) => {
-          // Simulate a weather API call
-          const temperature = Math.floor(Math.random() * 100);
-          return {
-            city,
-            temperature,
-            condition: "sunny",
-          };
+      write_file: {
+        description: "Write a todo list vue3 code to a file",
+        inputSchema: z.object({ path: z.string(), content: z.string() }),
+        execute: async ({ path, content }) => {
+          return { path, content };
         },
       },
     },
@@ -103,6 +62,17 @@ async function streamE2E(model: LanguageModel) {
         name: part.toolName,
         input: part.input,
         output: part.output,
+      });
+    } else if (part.type === "tool-input-start") {
+      console.log({
+        type: part.type,
+        id: part.id,
+        toolName: part.toolName,
+      });
+    } else if (part.type === "tool-input-end") {
+      console.log({
+        type: part.type,
+        id: part.id,
       });
     }
   }
