@@ -21,7 +21,7 @@ const friendli = createOpenAICompatible({
 
 const testModels = {
   xml: wrapLanguageModel({
-    model: openrouter("z-ai/glm-4.5-air"),
+    model: openrouter("z-ai/glm-4.6"),
     middleware: morphXmlToolMiddleware,
   }),
 };
@@ -38,11 +38,13 @@ async function streamE2E(model: LanguageModel) {
     model: model,
     temperature: 0.0,
     system: "You are a helpful assistant.",
-    prompt: "Write a todo list vue3 code to a file",
+    prompt:
+      "NOTE: 我在进行调试错误处理，请错误地调用 write_file 工具，比如 content close tag 少一个字母",
     stopWhen: stepCountIs(4),
+    onError: event => console.warn("out onError", event),
     tools: {
       write_file: {
-        description: "Write a todo list vue3 code to a file",
+        description: "write a file to disk",
         inputSchema: z.object({ path: z.string(), content: z.string() }),
         execute: async ({ path, content }) => {
           return { path, content };

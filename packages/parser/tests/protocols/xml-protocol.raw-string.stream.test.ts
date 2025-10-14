@@ -140,14 +140,10 @@ describe("morphXmlProtocol raw string handling in streaming", () => {
       (p): p is Extract<LanguageModelV2StreamPart, { type: "text-delta" }> =>
         p.type === "text-delta"
     );
-    const combined = textParts.map(p => p.delta).join("");
-    expect(combined).toContain("<write_file>");
-    expect(combined).toContain(
-      "<content>part1</content><content>part2</content>"
-    );
-    expect(combined).toContain("</write_file>");
-    const hasToolCall = out.some(p => p.type === "tool-call");
-    expect(hasToolCall).toBe(false);
+    const toolCall = out.find(p => p.type === "tool-call");
+    expect(toolCall).toBeDefined();
+    const args = JSON.parse(toolCall?.input || "{}");
+    expect(args.__parse_error).toBeDefined();
   });
 
   it("captures DOCTYPE HTML inside string-typed <content> during streaming (user-reported)", async () => {

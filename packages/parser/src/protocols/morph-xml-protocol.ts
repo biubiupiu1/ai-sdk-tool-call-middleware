@@ -208,7 +208,8 @@ export const morphXmlProtocol = (): ToolCallProtocol => ({
                 } else if (error instanceof RXML.RXMLCoercionError) {
                   message = `Failed to coerce arguments for streaming tool call '${currentToolCall.name}'; emitting original text.`;
                 } else if (error instanceof RXML.RXMLParseError) {
-                  message = `Failed to parse XML for streaming tool call '${currentToolCall.name}'; emitting original text.`;
+                  const causeMessage = error?.cause || error.message;
+                  message = `Failed to parse XML for streaming tool call '${currentToolCall.name}': ${causeMessage}`;
                 }
                 options?.onError?.(message, {
                   toolCall: originalCallText,
@@ -222,7 +223,17 @@ export const morphXmlProtocol = (): ToolCallProtocol => ({
                   id: currentToolCall.id,
                 });
 
-                flushText(controller, originalCallText);
+                // 这里实际是抛出错误，这里错误的 input 会导致 aisdk 解析失败自动重试
+                controller.enqueue({
+                  type: "tool-call",
+                  toolCallId: currentToolCall.id,
+                  toolName: currentToolCall.name,
+                  input: JSON.stringify({
+                    __parse_error: `${message}, xml parsing error, please check the input`,
+                  }),
+                });
+
+                // flushText(controller, originalCallText);
               }
               currentToolCall = null;
             } else {
