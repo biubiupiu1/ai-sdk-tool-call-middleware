@@ -1,5 +1,16 @@
 # @ai-sdk-tool/parser
 
+## 2.2.0
+
+### Minor Changes
+
+- fix error
+
+### Patch Changes
+
+- Updated dependencies
+  - @biubiupiu/rxml@0.2.0
+
 ## 2.1.7
 
 ### Patch Changes

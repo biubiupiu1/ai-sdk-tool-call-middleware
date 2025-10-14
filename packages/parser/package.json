@@ -1,6 +1,6 @@
 {
   "name": "@biubiupiu/ai-sdk-tool-parser",
-  "version": "2.1.7-biubiupiu.4",
+  "version": "2.2.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
