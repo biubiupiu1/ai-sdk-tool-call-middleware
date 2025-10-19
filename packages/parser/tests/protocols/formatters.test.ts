@@ -61,8 +61,24 @@ describe("protocol formatters", () => {
       type: "tool-result",
       toolName: "a",
       toolCallId: "id",
-      output: { ok: true },
-    } as any);
-    expect(resp).toContain("<tool_response>");
+      output: {
+        type: "json",
+        value: { ok: true },
+      },
+    });
+    expect(resp).toContain("<ok>true</ok>");
+    expect(resp).not.toContain("<xml");
+
+    const resp2 = p.formatToolResponse({
+      type: "tool-result",
+      toolName: "a",
+      toolCallId: "id",
+      output: {
+        type: "text",
+        value: "this is a text",
+      },
+    });
+    expect(resp2).toContain("<result>this is a text</result>");
+    expect(resp2).not.toContain("<xml");
   });
 });

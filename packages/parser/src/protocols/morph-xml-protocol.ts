@@ -42,16 +42,62 @@ export const morphXmlProtocol = (): ToolCallProtocol => ({
   },
 
   formatToolResponse(toolResult: LanguageModelV2ToolResultPart): string {
-    return RXML.stringify(
+    let formattedResult: unknown;
+
+    // Handle different output types with special processing
+    switch (toolResult.output.type) {
+      case "text":
+        formattedResult = toolResult.output.value;
+        break;
+      case "json":
+        formattedResult = toolResult.output.value;
+        break;
+      case "error-text":
+        formattedResult = {
+          error: true,
+          message: toolResult.output.value,
+        };
+        break;
+      case "error-json":
+        formattedResult = {
+          error: true,
+          data: toolResult.output.value,
+        };
+        break;
+      case "content":
+        // Transform content array into a structured format
+        formattedResult = {
+          content: toolResult.output.value.map(item => {
+            if (item.type === "text") {
+              return { type: "text", text: item.text };
+            } else if (item.type === "media") {
+              return {
+                type: "media",
+                data: item.data,
+                mediaType: item.mediaType,
+              };
+            }
+            return item;
+          }),
+        };
+        break;
+      default:
+        // Fallback for unknown types
+        formattedResult = toolResult.output;
+        break;
+    }
+
+    const xml = RXML.stringify(
       "tool_response",
       {
         tool_name: toolResult.toolName,
-        result: toolResult.output,
+        result: formattedResult,
       },
       {
         disableEscape: true,
       }
     );
+    return xml.replace(/<\?xml[^>]*>/g, "");
   },
 
   parseGeneratedText({ text, tools, options }) {
