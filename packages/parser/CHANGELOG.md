@@ -1,5 +1,11 @@
 # @ai-sdk-tool/parser
 
+## 2.3.0
+
+### Minor Changes
+
+- 改进XML协议工具响应格式化逻辑
+
 ## 2.2.0
 
 ### Minor Changes
